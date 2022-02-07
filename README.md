@@ -31,3 +31,8 @@ This is a collaborative student tester for assignment 1 of COMP 251: Data Struct
 
 ## Running the tests
 To run the tests, run `Tester.java`. This should tell you which tests are failing and provide some information on what's wrong.
+
+## Contributing
+- If you notice a bug, please open an issue and describe the problem: https://github.com/louis-hildebrand/comp251-a1-tester/issues/new.
+- If you'd like to add your own tests, please fork the GitHub repository, make your changes, and open a pull request. I'll do my best to review the changes promptly.
+    - ___IMPORTANT:___ Only add test code here, NEVER assignment code.
