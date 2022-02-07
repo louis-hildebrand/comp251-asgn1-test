@@ -4,9 +4,9 @@ This is a collaborative student tester for assignment 1 of COMP 251: Data Struct
 ## Installation
 1. Clone or download the entire test repository.
 	- Cloning the repository is the recommended option if you're familiar with Git, as it will allow you to more easily stay up to date as more tests are added. To do so, move to the src/ folder of your assignment and run the command
-	```sh
-	git clone https://github.com/louis-hildebrand/comp251-a1-tester.git test
-	```
+        ```sh
+        git clone https://github.com/louis-hildebrand/comp251-a1-tester.git test
+        ```
 	- Otherwise, download the entire repository by going to https://github.com/louis-hildebrand/comp251-a1-tester, pressing the big green button, and pressing "Download ZIP." Unzip the test folder into `src/test` in your assignment folder. Make sure that the `test` folder isn't duplicated (i.e. `src/test/test`). See the example below for details.
 2. Ensure the project packages are named correctly. The tester assumes that it is in the `src/test` folder and that your assignment code is in the `src/main` folder. In other words, your project setup should look something like this:
     ```
