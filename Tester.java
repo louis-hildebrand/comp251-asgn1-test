@@ -5,6 +5,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import main.A1_Q3;
+import main.Chaining;
+import test.TestHelper.Tuple;
+
+class Chaining_chain implements Runnable {
+	private List<Tuple<Integer, Integer>> testInputsOutputs = List.of(
+			new Tuple<Integer, Integer>(0, 0),
+			new Tuple<Integer, Integer>(1, 79),
+			new Tuple<Integer, Integer>(2, 30),
+			new Tuple<Integer, Integer>(3, 109),
+			new Tuple<Integer, Integer>(4, 60));
+
+	@Override
+	public void run() {
+		int w = 13;
+		int seed = -1;
+		int A = 5063;
+		Chaining chaining = TestHelper.instantiateChaining(w, seed, A);
+
+		for (Tuple<Integer, Integer> inputOutput : testInputsOutputs) {
+			int expected = inputOutput.second;
+			int k = inputOutput.first;
+			int actual = chaining.chain(k);
+			TestHelper.assertEqual(expected, actual);
+		}
+	}
+}
 
 class Q3_empty implements Runnable {
 	@Override
@@ -88,6 +114,7 @@ class Q3_large_input1 implements Runnable {
 
 public class Tester {
 	private static Class<?>[] testClasses = {
+			Chaining_chain.class,
 			Q3_empty.class,
 			Q3_no_output.class,
 			Q3_example1.class,

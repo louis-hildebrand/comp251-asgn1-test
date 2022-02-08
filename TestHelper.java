@@ -4,12 +4,29 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import main.Chaining;
 
 public class TestHelper {
 	public static String listToString(List<String> lst) {
 		return lst == null ? "null" : "[" + String.join(", ", lst) + "]";
+	}
+
+	public static void assertEqual(Object expected, Object actual) {
+		boolean equal;
+		if (expected == null) {
+			equal = actual == null;
+		}
+		else {
+			equal = expected.equals(actual);
+		}
+		if (!equal) {
+			throw new AssertionError(String.format("Expected value %s but received value %s.", expected, actual));
+		}
 	}
 
 	public static void assertEqualsList(List<String> expected, List<String> actual) {
@@ -44,5 +61,28 @@ public class TestHelper {
 		}
 
 		return clsString.substring(11);
+	}
+
+	public static Chaining instantiateChaining(int w, int seed, int A) {
+		try {
+			// Garbage code, but I don't know what else to do (except dumping every file in the default package)
+			Constructor<Chaining> constructor = Chaining.class.getDeclaredConstructor(int.class, int.class, int.class);
+			constructor.setAccessible(true);
+			return constructor.newInstance(w, seed, A);
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new RuntimeException("Failed to instantiate Chaining class: could not find constructor.", e);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new RuntimeException("Failed to instantiate Chaining class: constructor threw an exception,", e);
+		}
+	}
+
+	public static class Tuple<X, Y> {
+		public X first;
+		public Y second;
+
+		public Tuple(X x, Y y) {
+			this.first = x;
+			this.second = y;
+		}
 	}
 }
