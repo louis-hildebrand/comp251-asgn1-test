@@ -99,22 +99,4 @@ public class TestHelper {
 				e);
 		}
 	}
-
-	public static class Tuple<X, Y> {
-		private X first;
-		private Y second;
-
-		public Tuple(X x, Y y) {
-			this.first = x;
-			this.second = y;
-		}
-
-		public X first() {
-			return this.first;
-		}
-
-		public Y second() {
-			return this.second;
-		}
-	}
 }

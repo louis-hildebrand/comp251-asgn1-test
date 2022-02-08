@@ -7,15 +7,15 @@ import java.util.List;
 import main.A1_Q3;
 import main.Chaining;
 import main.Open_Addressing;
-import test.TestHelper.Tuple;
 
 class Chaining_chain1 implements Runnable {
-	private List<Tuple<Integer, Integer>> testInputsOutputs = List.of(
-		new Tuple<Integer, Integer>(0, 0),
-		new Tuple<Integer, Integer>(1, 79),
-		new Tuple<Integer, Integer>(2, 30),
-		new Tuple<Integer, Integer>(3, 109),
-		new Tuple<Integer, Integer>(4, 60));
+	private int[][] testInputsOutputs = {
+		{0, 0},
+		{1, 79},
+		{2, 30},
+		{3, 109},
+		{4, 60}
+	};
 
 	@Override
 	public void run() {
@@ -24,9 +24,9 @@ class Chaining_chain1 implements Runnable {
 		int A = 5063;
 		Chaining chaining = TestHelper.instantiateChaining(w, seed, A);
 
-		for (Tuple<Integer, Integer> inputOutput : testInputsOutputs) {
-			int expected = inputOutput.second();
-			int k = inputOutput.first();
+		for (int[] inputOutput : testInputsOutputs) {
+			int expected = inputOutput[1];
+			int k = inputOutput[0];
 			int actual = chaining.chain(k);
 			TestHelper.assertEqual(expected, actual, null);
 		}
