@@ -236,6 +236,39 @@ class Open_Addressing_remove_full implements Runnable {
 	}
 }
 
+class Open_Addressing_add_remove implements Runnable {
+	@Override
+	public void run() {
+		int w = 13;
+		int seed = -1;
+		int A = 5063;
+		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
+		int[] table = openAddressing.Table;
+		int numCollisions;
+
+		// Insert key
+		int key = 42;
+		int index = 122;
+		numCollisions = openAddressing.insertKey(key);
+		TestHelper.assertEqual(0, numCollisions, "Expected 0 collisions but observed " + numCollisions + ".");
+		TestHelper.assertEqual(key, table[index],
+			"Key " + key + " was not inserted into the table properly (Table[" + index + "] = " + table[index] + ").");
+
+		// Remove key
+		numCollisions = openAddressing.removeKey(42);
+		TestHelper.assertEqual(0, numCollisions, "Expected 0 collisions but observed " + numCollisions + ".");
+		if (table[index] >= 0) {
+			throw new AssertionError("Key was not removed from the table properly (Table[" + index + "] = " + table[index] + ").");
+		}
+
+		// Insert key again
+		numCollisions = openAddressing.insertKey(42);
+		TestHelper.assertEqual(0, numCollisions, "Expected 0 collisions but observed " + numCollisions + ".");
+		TestHelper.assertEqual(key, table[index],
+			"Key " + key + " was not inserted into the table properly (Table[" + index + "] = " + table[index] + ").");
+	}
+}
+
 class Q3_empty implements Runnable {
 	@Override
 	public void run() {
@@ -325,6 +358,7 @@ public class Tester {
 		Open_Addressing_insert_full.class,
 		Open_Addressing_remove1.class,
 		Open_Addressing_remove_full.class,
+		Open_Addressing_add_remove.class,
 		Q3_empty.class,
 		Q3_no_output.class,
 		Q3_example1.class,
