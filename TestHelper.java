@@ -100,7 +100,7 @@ public class TestHelper {
 		}
 	}
 
-	public static void testOpenAddressing(Open_Addressing openAddressing, int[][] testInputsOutputs) {
+	public static void testOpenAddressingInsert(Open_Addressing openAddressing, int[][] testInputsOutputs) {
 		for (int[] test : testInputsOutputs) {
 			int key = test[0];
 			int expectedCollisions = test[1];
@@ -120,6 +120,46 @@ public class TestHelper {
 			failureMessage = String.format("Expected %d collisions, but observed %s collisions.", expectedCollisions,
 				actualCollisions);
 			TestHelper.assertEqual(expectedCollisions, actualCollisions, failureMessage);
+		}
+	}
+
+	public static void testOpenAddressingRemove(Open_Addressing openAddressing, int[][] testInputsOutputs) {
+		int[] table = openAddressing.Table;
+
+		for (int[] test : testInputsOutputs) {
+			int key = test[0];
+			int index = test[1];
+			int optimalCollisions = test[2];
+
+			// Remove key
+			int actualCollisions = openAddressing.removeKey(key);
+
+			// Check that key is no longer in table (if it was there to begin with)
+			if (index >= 0) {
+				int keyAtIndex = table[index];
+				if (keyAtIndex >= 0) {
+					String errorMessage = String.format(
+						"Expected Table[%d] to be negative (key deleted), but found value %d.", index, keyAtIndex);
+					throw new AssertionError(errorMessage);
+				}
+			}
+
+			// Check that number of collisions is optimal
+			if (actualCollisions > optimalCollisions) {
+				String errorMessage = String.format(
+					"It took you %d collisions to remove or give up on key %d. \nYou can do better (optimal number is at most %d).",
+					actualCollisions, key, optimalCollisions);
+				throw new AssertionError(errorMessage);
+			}
+			// Check that number of collisions isn't somehow better than optimal
+			else if (actualCollisions < optimalCollisions) {
+				String message = String.format(
+					"It took you %d collisions to remove or give up on key %d! I thought the optimal number was %d.\n"
+					+ "If you're confident in your answer, please open an issue on GitHub:\n"
+					+ "https://github.com/louis-hildebrand/comp251-a1-tester/issues/new",
+					actualCollisions, key, optimalCollisions);
+				throw new AssertionError(message);
+			}
 		}
 	}
 }

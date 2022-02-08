@@ -133,7 +133,7 @@ class Open_Addressing_insert1 implements Runnable {
 		int A = 5063;
 		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
 
-		TestHelper.testOpenAddressing(openAddressing, testInputsOutputs);
+		TestHelper.testOpenAddressingInsert(openAddressing, testInputsOutputs);
 	}
 }
 
@@ -154,7 +154,7 @@ class Open_Addressing_insert_full implements Runnable {
 		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
 
 		// Test first few insertions normally
-		TestHelper.testOpenAddressing(openAddressing, testInputsOutputs);
+		TestHelper.testOpenAddressingInsert(openAddressing, testInputsOutputs);
 
 		// Try inserting into full table
 		int numCollisions = openAddressing.insertKey(5);
@@ -169,6 +169,70 @@ class Open_Addressing_insert_full implements Runnable {
 		TestHelper.assertEqual(0, table[1], "Table[1] changed from 0 to" + table[1] + ".");
 		TestHelper.assertEqual(123985, table[2], "Table[2] changed from 123985 to" + table[2] + ".");
 		TestHelper.assertEqual(17, table[3], "Table[3] changed from 17 to" + table[3] + ".");
+	}
+}
+
+class Open_Addressing_remove1 implements Runnable {
+	// Each test is in the format [key, index (or negative number if not applicable), optimal #collisions]
+	private int[][] testInputsOutputs = {
+		{108, -1, 1},
+		{89, 1, 1},
+		{144, 3, 4},
+		{144, -1, 6}
+	};
+
+	@Override
+	public void run() {
+		int w = 13;
+		int seed = -1;
+		int A = 5063;
+		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
+		int[] table = openAddressing.Table;
+		table[0] = 0;
+		table[1] = 89;
+		table[2] = 233;
+		table[3] = 144;
+		table[109] = 3;
+		table[110] = 147;
+		table[127] = 55;
+
+		TestHelper.testOpenAddressingRemove(openAddressing, testInputsOutputs);
+
+		// Check that non-removed keys are still there
+		TestHelper.assertEqual(0, table[0], "Table[0] was changed (current value is " + table[0] + ").");
+		TestHelper.assertEqual(233, table[2], "Table[2] was changed (current value is " + table[2] + ").");
+		TestHelper.assertEqual(3, table[109], "Table[109] was changed (current value is " + table[109] + ").");
+		TestHelper.assertEqual(147, table[110], "Table[110] was changed (current value is " + table[110] + ").");
+		TestHelper.assertEqual(55, table[127], "Table[127] was changed (current value is " + table[127] + ").");
+	}
+}
+
+class Open_Addressing_remove_full implements Runnable {
+	// Each test is in the format [key, index (or negative number if not applicable), optimal #collisions]
+	private int[][] testInputsOutputs = {
+		{3, -1, 4},
+		{123985, 2, 3},
+		{42, -1, 4}
+	};
+
+	@Override
+	public void run() {
+		int w = 3;
+		int seed = -1;
+		int A = 6;
+		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
+		int[] table = openAddressing.Table;
+		table[0] = 4;
+		table[1] = 0;
+		table[2] = 123985;
+		table[3] = 17;
+
+		TestHelper.testOpenAddressingRemove(openAddressing, testInputsOutputs);
+
+		// Check that non-removed keys are still there
+		TestHelper.assertEqual(4, table[0], "Table[0] was changed (current value is " + table[0] + ").");
+		TestHelper.assertEqual(0, table[1], "Table[1] was changed (current value is " + table[1] + ").");
+		TestHelper.assertEqual(17, table[3], "Table[3] was changed (current value is " + table[3] + ").");
 	}
 }
 
@@ -259,6 +323,8 @@ public class Tester {
 		Open_Addressing_probe1.class,
 		Open_Addressing_insert1.class,
 		Open_Addressing_insert_full.class,
+		Open_Addressing_remove1.class,
+		Open_Addressing_remove_full.class,
 		Q3_empty.class,
 		Q3_no_output.class,
 		Q3_example1.class,
