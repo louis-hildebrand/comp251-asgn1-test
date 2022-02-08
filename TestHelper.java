@@ -99,4 +99,27 @@ public class TestHelper {
 				e);
 		}
 	}
+
+	public static void testOpenAddressing(Open_Addressing openAddressing, int[][] testInputsOutputs) {
+		for (int[] test : testInputsOutputs) {
+			int key = test[0];
+			int expectedCollisions = test[1];
+			int expectedIndex = test[2];
+			String failureMessage = null;
+
+			// Insert key
+			int actualCollisions = openAddressing.insertKey(key);
+
+			// Check that key was inserted at the right place
+			int keyAtIndex = openAddressing.Table[expectedIndex];
+			failureMessage = String.format("Expected to find key %d in Table[%d], but found %d.", key, expectedIndex,
+				keyAtIndex);
+			TestHelper.assertEqual(key, keyAtIndex, failureMessage);
+
+			// Check that number of collisions is correct
+			failureMessage = String.format("Expected %d collisions, but observed %s collisions.", expectedCollisions,
+				actualCollisions);
+			TestHelper.assertEqual(expectedCollisions, actualCollisions, failureMessage);
+		}
+	}
 }

@@ -54,8 +54,11 @@ class Chaining_insert1 implements Runnable {
 			int expectedCollisions = test[1];
 			int key = test[0];
 			String failureMessage = null;
+
+			// Insert key
 			int actualCollisions = chaining.insertKey(key);
 
+			// Check that key was inserted at the right place
 			try {
 				int keyAtLocation = chaining.Table.get(test[2]).get(expectedCollisions);
 				failureMessage = String.format("Expected to find key %d in Table[%d][%d], but found %d.", key, test[2],
@@ -68,6 +71,7 @@ class Chaining_insert1 implements Runnable {
 				throw new AssertionError(failureMessage, e);
 			}
 
+			// Check that number of collisions is correct
 			failureMessage = String.format("Expected %d collisions, but observed %s collisions.", expectedCollisions,
 				actualCollisions);
 			TestHelper.assertEqual(expectedCollisions, actualCollisions, failureMessage);
@@ -107,6 +111,64 @@ class Open_Addressing_probe1 implements Runnable {
 			int actual = openAddressing.probe(k, i);
 			TestHelper.assertEqual(expected, actual, null);
 		}
+	}
+}
+
+class Open_Addressing_insert1 implements Runnable {
+	// Each test is in the format [key, collisions, index of key in table]
+	private int[][] testInputsOutputs = {
+		{0, 0, 0},
+		{89, 1, 1},
+		{3, 0, 109},
+		{147, 1, 110},
+		{233, 2, 2},
+		{55, 0, 127},
+		{144, 4, 3}
+	};
+
+	@Override
+	public void run() {
+		int w = 13;
+		int seed = -1;
+		int A = 5063;
+		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
+
+		TestHelper.testOpenAddressing(openAddressing, testInputsOutputs);
+	}
+}
+
+class Open_Addressing_insert_full implements Runnable {
+	// Each test is in the format [key, collisions, index of key in table]
+	private int[][] testInputsOutputs = {
+		{4, 0, 0},
+		{0, 1, 1},
+		{17, 0, 3},
+		{123985, 3, 2}
+	};
+
+	@Override
+	public void run() {
+		int w = 3;
+		int seed = -1;
+		int A = 6;
+		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
+
+		// Test first few insertions normally
+		TestHelper.testOpenAddressing(openAddressing, testInputsOutputs);
+
+		// Try inserting into full table
+		int numCollisions = openAddressing.insertKey(5);
+
+		// Method should check all cells before giving up
+		String failureMessage = String.format("Expected 4 collisions, but observed %s collisions.", numCollisions);
+		TestHelper.assertEqual(4, numCollisions, failureMessage);
+
+		// Table should be unaffected by the operation
+		int[] table = openAddressing.Table;
+		TestHelper.assertEqual(4, table[0], "Table[0] changed from 4 to" + table[0] + ".");
+		TestHelper.assertEqual(0, table[1], "Table[1] changed from 0 to" + table[1] + ".");
+		TestHelper.assertEqual(123985, table[2], "Table[2] changed from 123985 to" + table[2] + ".");
+		TestHelper.assertEqual(17, table[3], "Table[3] changed from 17 to" + table[3] + ".");
 	}
 }
 
@@ -195,6 +257,8 @@ public class Tester {
 		Chaining_chain1.class,
 		Chaining_insert1.class,
 		Open_Addressing_probe1.class,
+		Open_Addressing_insert1.class,
+		Open_Addressing_insert_full.class,
 		Q3_empty.class,
 		Q3_no_output.class,
 		Q3_example1.class,
