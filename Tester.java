@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import main.A1_Q3;
 import main.Chaining;
+import main.Open_Addressing;
 import test.TestHelper.Tuple;
 
 class Chaining_chain implements Runnable {
@@ -24,9 +25,44 @@ class Chaining_chain implements Runnable {
 		Chaining chaining = TestHelper.instantiateChaining(w, seed, A);
 
 		for (Tuple<Integer, Integer> inputOutput : testInputsOutputs) {
-			int expected = inputOutput.second;
-			int k = inputOutput.first;
+			int expected = inputOutput.second();
+			int k = inputOutput.first();
 			int actual = chaining.chain(k);
+			TestHelper.assertEqual(expected, actual);
+		}
+	}
+}
+
+class Open_Addressing_probe implements Runnable {
+	private int[][] testInputsOutputs = {
+			{0, 0, 0},
+			{0, 1, 1},
+			{0, 2, 2},
+			{1, 0, 79},
+			{1, 1, 80},
+			{1, 2, 81},
+			{2, 0, 30},
+			{2, 1, 31},
+			{2, 2, 32},
+			{2, 3, 33},
+			{3, 0, 109},
+			{3, 18, 127},
+			{3, 19, 0},
+			{3, 20, 1}
+	};
+
+	@Override
+	public void run() {
+		int w = 13;
+		int seed = -1;
+		int A = 5063;
+		Open_Addressing openAddressing = TestHelper.instantiateOpenAddressing(w, seed, A);
+
+		for (int[] inputOutput : testInputsOutputs) {
+			int expected = inputOutput[2];
+			int k = inputOutput[0];
+			int i = inputOutput[1];
+			int actual = openAddressing.probe(k, i);
 			TestHelper.assertEqual(expected, actual);
 		}
 	}
@@ -115,6 +151,7 @@ class Q3_large_input1 implements Runnable {
 public class Tester {
 	private static Class<?>[] testClasses = {
 			Chaining_chain.class,
+			Open_Addressing_probe.class,
 			Q3_empty.class,
 			Q3_no_output.class,
 			Q3_example1.class,

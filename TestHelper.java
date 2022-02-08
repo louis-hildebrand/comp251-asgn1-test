@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.Chaining;
+import main.Open_Addressing;
 
 public class TestHelper {
 	public static String listToString(List<String> lst) {
@@ -76,13 +77,34 @@ public class TestHelper {
 		}
 	}
 
+	public static Open_Addressing instantiateOpenAddressing(int w, int seed, int A) {
+		try {
+			// Garbage code, but I don't know what else to do (except dumping every file in the default package)
+			Constructor<Open_Addressing> constructor = Open_Addressing.class.getDeclaredConstructor(int.class, int.class, int.class);
+			constructor.setAccessible(true);
+			return constructor.newInstance(w, seed, A);
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new RuntimeException("Failed to instantiate Open_Addressing class: could not find constructor.", e);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new RuntimeException("Failed to instantiate Open_Addressing class: constructor threw an exception,", e);
+		}
+	}
+
 	public static class Tuple<X, Y> {
-		public X first;
-		public Y second;
+		private X first;
+		private Y second;
 
 		public Tuple(X x, Y y) {
 			this.first = x;
 			this.second = y;
+		}
+
+		public X first() {
+			return this.first;
+		}
+
+		public Y second() {
+			return this.second;
 		}
 	}
 }
