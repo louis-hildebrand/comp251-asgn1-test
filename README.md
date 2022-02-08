@@ -28,6 +28,7 @@ This is a collaborative student tester for assignment 1 of COMP 251: Data Struct
     │       └── q3_make_discussion_board.py
     └── unionfind.txt
     ```
+    - __NOTE:__ Putting the assignment code in the main package will prevent it from compiling on Ed. Remember to remove the first line (`package main;`) from each file before submitting.
 
 ## Running the tests
 To run the tests, run `Tester.java`. This should tell you which tests are failing and provide some information on what's wrong.
