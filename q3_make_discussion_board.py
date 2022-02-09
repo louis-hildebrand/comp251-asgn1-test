@@ -61,7 +61,7 @@ def main():
         for l in lines:
             f.write(f'{l}\n')
     frequencies_list = list(frequencies.items())
-    frequencies_list.sort(key = lambda x: x[1])
+    frequencies_list.sort(key = lambda x: (-x[1], x[0]),)
     output = [x[0] for x in frequencies_list]
     print(frequencies_list)
     with open(OUTPUT_FILE, "w") as f:
